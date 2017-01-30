@@ -25,5 +25,5 @@ let webpackConfig = {
     	extensions: ['', '.js'] //enables to leave off the extension when importing
     }
 
-}
+};
 export default webpackConfig;
