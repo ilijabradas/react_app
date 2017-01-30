@@ -1,0 +1,84 @@
+﻿
+    {
+    "extends": "eslint:recommended",
+      "parser": "babel-eslint",
+      "parserOptions": {
+      "ecmaFeatures": {
+        "sourceType": "module",
+        "jsx": true,
+        "arrowFunctions": true,
+        "blockBindings": true,
+        "generators": true,
+        "modules": true,
+        "classes": true
+      }
+      },
+      "plugins":[
+          "react"
+      ],
+      // To give you an idea how to override rule options:
+      "rules": {
+        "strict": 0,
+        "semi": [1, "always"],
+        "no-console": 0,
+        "no-mixed-spaces-and-tabs": 0,
+        "no-underscore-dangle": 0,
+        "no-unused-vars": 0,
+        "curly": 0,
+        "no-multi-spaces": 0,
+        "key-spacing": 0,
+        "no-return-assign": 0,
+        "consistent-return": 0,
+        "no-shadow": 0,
+        "no-comma-dangle": 0,
+        "no-use-before-define": 0,
+        "no-empty": 0,
+        "new-parens": 0,
+        "no-cond-assign": 0,
+        "quotes": [2, "single", "avoid-escape"],
+        "camelcase": 0,
+        "new-cap": [1, { "capIsNew": false }],
+        "no-undef": 2,
+        "eqeqeq": 0,
+        "brace-style": [2, "stroustrup"],
+        "eol-last": 0,
+        "no-nested-ternary": 1,
+        "padded-blocks": [1, "never"],
+        "space-before-function-paren": [1, "never"],
+        "space-before-blocks": [1, "always"],
+        // React
+        "react/display-name": 0,
+        "react/jsx-boolean-value": 1,
+        "react/jsx-closing-bracket-location": 1,
+        "react/jsx-curly-spacing": 1,
+        "react/jsx-max-props-per-line": 0,
+        "react/jsx-indent-props": 0,
+        "react/jsx-no-duplicate-props": 1,
+        "react/jsx-no-undef": 1,
+        "jsx-quotes": 1,
+        "react/jsx-sort-prop-types": 0,
+        "react/jsx-sort-props": 0,
+        "react/jsx-uses-react": 1,
+        "react/jsx-uses-vars": 1,       //Prevent variables used in JSX to be incorrectly marked as unused
+        "react/no-danger": 0,
+        "react/no-set-state": 0,
+        "react/no-did-mount-set-state": 1,
+        "react/no-did-update-set-state": 1,
+        "react/no-multi-comp": 0,
+        "react/no-unknown-property": 1,
+        "react/prop-types": 0,
+        "react/react-in-jsx-scope": 1,
+        "react/require-extension": 1,
+        "react/self-closing-comp": 1,
+        "react/sort-comp": 1,
+        "react/wrap-multilines": 1
+      },
+      "env": {
+        "node": true,
+        "browser": true,
+        "jquery": true
+      },
+      "globals": {
+        "IS_SERVER": true
+      }
+    }
