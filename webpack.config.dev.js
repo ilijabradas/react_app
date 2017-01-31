@@ -16,7 +16,7 @@ let webpackConfig = {
     ],
     module: {
         loaders: [{
-            test: /\.js$/,
+            test: /(\.js|\.jsx)$/,
             include: path.join(__dirname, 'client'), //includev files only from client folder
             loaders: ['react-hot','babel']
         }]
