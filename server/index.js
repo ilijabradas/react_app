@@ -1,13 +1,20 @@
 import express from 'express';
 import path from 'path';
+import bodyParser from 'body-parser';
 
 import webpack from 'webpack';
 import webpackMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackCongif from '../webpack.config.dev';
 
+import users from './routes/users';
+
 const compiler = webpack(webpackCongif);
 let app = express();
+app.use(bodyParser.json());
+
+app.use('/api/users', users);
+
 app.use(webpackMiddleware(compiler, {
 	hot:true,
 	publicPath: webpackCongif.output.publicPath,

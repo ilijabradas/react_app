@@ -3,7 +3,10 @@
 	import _ from 'lodash';
 
 	class SignupForm extends Component { //if component have state it needs to be class
-   constructor(props) {
+		propTypes: {
+		userSignupRequest: React.PropTypes.func.isRequired
+	 }
+	 constructor(props) {
 		 super(props);
 		 this.state = {
 			 username: '',
@@ -20,12 +23,14 @@
 	 }
 	 onSubmit = (e) => {
 		 e.preventDefault();
-		 console.log(this.state);
+		 /** here we call a function which will store the state*/
+		 this.props.saveUser(this.state);
 	 }
    render() {
 		 const options = _.map(timezones, (key, val) => {
 			return  <option key={key} value={val}>{val}</option>;
 		 });
+
 			return (
 				<form onSubmit={this.onSubmit}>
 					<h1>Join our Community!</h1>
@@ -90,4 +95,5 @@
 			);
 		}
 	}
+
 	export default SignupForm;
