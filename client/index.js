@@ -4,9 +4,10 @@ import { Router, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk'; //thunk allows us to dispatch asynchronous actions
 import createLogger from 'redux-logger';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import routes from './routes';
 import rootReducer from './reducers/reducerCombined';
+import bootstraploader from 'bootstrap-loader';
 /*
  *1st param is rootReducer
  *this is a function that take state and action

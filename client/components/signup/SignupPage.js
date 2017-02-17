@@ -1,32 +1,34 @@
-import React from 'react';
+import React, {Component} from 'react';
 import SignupForm from './SignupForm';
-import { connect } from 'react-redux';
-import * as actions from '../../actions/actionSignup';
+import { Grid, Row, Col, ListGroupItem } from 'react-bootstrap';
+import { Link } from 'react-router';
 
-class SignupPage extends React.Component {
-	propTypes: {
-	userSignupRequest: React.PropTypes.func.isRequired
- }
-	render() {
-		return(
-	      <div className="row">
-	        <div className="col-md-4 col-md-offset-4">
-					<SignupForm saveUser={this.props.saveUser} />
-	        </div>
-	      </div>
-		);
-	}
+class SignupPage extends Component {
+
+    render() {
+        return (
+          <Grid>
+					<Row>
+	          <Col sm={6} smPush={3}>
+							<SignupForm/>
+	          </Col>
+          </Row>
+          <Row>
+            <Col sm={6} smPush={3}>
+              <ListGroupItem bsStyle="info">Already have an account? <Link to={'/signin'}>Log in</Link></ListGroupItem>
+            </Col>
+          </Row>
+         </Grid>
+        );
+    }
 }
-// function mapStateToProps(state) {
-//   return { saved: state.signup.saved
-//    };
-// }
+
 // function mapDispatchToProps(dispatch) {
 //   return {
 //     saveUser: () => dispatch(saveUser())
 //   };
 // }
-export default connect(null, actions )(SignupPage);
+export default SignupPage;
 /**
  * This page get this function userSignupRequest from redux
  *  We use connect, higher ordewr component to provide

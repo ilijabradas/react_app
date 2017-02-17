@@ -1,0 +1,5 @@
+.form_group {
+  margin-top: 20px;
+    margin-bottom: 15px;
+    @include clearfix();
+}

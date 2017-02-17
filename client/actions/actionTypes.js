@@ -1,0 +1,11 @@
+export const SAVE_USER_SUCCESS = 'SAVE_USER_SUCCESS';
+export const SAVE_USER_FAILURE = 'SAVE_USER_FAILURE';
+export const IS_LOADING = 'IS_LOADING';
+
+export const HIDE_NOTIFICATION = 'HIDE_NOTIFICATION';
+
+export const LOGIN_USER_FAILURE = 'LOGIN_FAILURE';
+export const AUTH_USER = 'AUTH_USER';
+
+export const FORM_UPDATE_VALUE = 'FORM_UPDATE_VALUE';
+export const FORM_RESET = 'FORM_RESET';
