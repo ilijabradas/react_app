@@ -3,20 +3,45 @@ import _ from 'lodash';
 import {reduxForm, Field} from 'redux-form';
 import {connect} from 'react-redux';
 import styles from '../formElements/formElements.scss';
-import {loginUser}  from '../../actions/actionLogin';
+import {loginUser, loginUserFailure}  from '../../actions/actionLogin';
+import { addFlashMessage } from '../../actions/actionFlashMessage';
+import {formUpdate}   from '../../actions/actionForm';
 import FieldGroup from '../formElements/FieldGroup';
-import { Form, FormControl, Col, Checkbox, Button, FormGroup } from 'react-bootstrap';
+import { Form, FormControl, Col, Checkbox, Button, FormGroup, Alert } from 'react-bootstrap';
+import classnames from 'classnames';
+import { validateLoginForm } from '../../../server/models/validation';
+import isEmpty from 'lodash/isEmpty';
 
 // {... props} passing large number of props wrap in object with spread notation
 class SigninForm extends Component { //if component have state it needs to be class
     constructor(props) {
         super(props);
     }
-
+    onChange = (event, value) => {
+       this.props.onChange(event.target.name, event.target.value);
+    };
+    isFormValid = () => {
+    const { errors, message } =  validateLoginForm(this.props.values);
+    if (!isEmpty(errors)) {
+     this.props.loginUserFailure(errors, message);
+     this.props.addFlashMessage(message);
+    }
+    return isEmpty(errors);
+    }
+    onSave = (event) => {
+        event.preventDefault();
+        if(this.isFormValid()) {
+        this.props.onSave(this.props.values);
+      }
+    }
+    getClasses(field) {
+    return classnames({
+      'has-error': field
+    });
+    }
     render() {
-       const { handleSubmit, submitting } = this.props;
         return (
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={this.onSave} horizontal id="login">
                 <FieldGroup
                   id="formControlsEmail"
                   type="text"
@@ -25,7 +50,8 @@ class SigninForm extends Component { //if component have state it needs to be cl
                   placeholder="Enter Email"
                   value={this.props.values[name]}
                   onChange={this.onChange}
-                  help={this.state.errors.email}
+                  help={this.props.errors.email}
+                   className={this.getClasses(this.props.errors.email)}
                 />
                 <FieldGroup
                   id="formControlsPassword"
@@ -35,49 +61,47 @@ class SigninForm extends Component { //if component have state it needs to be cl
                   placeholder="Enter Password"
                   value={this.props.values[name]}
                   onChange={this.onChange}
-                  help={this.state.errors.password}
+                  help={this.props.errors.password}
+                   className={this.getClasses(this.props.errors.password)}
                 />
                 <FormGroup>
-                 <Col smOffset={4} sm={8}>
-                  <Button type="submit"/>
-                </Col>
-                    </FormGroup>
-								{this.props.errorMessage && this.props.errorMessage.login &&
-              <div className="help-block">{this.props.errorMessage.login}</div>}
+                  <Col smOffset={3} sm={9}>
+                    <Button type="submit"  disabled={this.props.isLoading}>
+                      { this.props.isLoading ? 'Please wait...' : 'Login'}
+                    </Button>
+                  </Col>
+                </FormGroup>
+                <FormGroup>
+                  <Col smOffset={3} sm={9}>
+                {this.props.message.style &&
+                  <Alert bsStyle={classnames({
+                    'success': this.props.message.style === 'success',
+                    'danger': this.props.message.style === 'danger'
+                    })}
+                  >
+                    {this.props.message.text}
+                  </Alert>}
+                  </Col>
+                </FormGroup>
             </Form>
         );
     }
 }
-const validate = values => {
-  const errors = {};
-  const fields = ['email', 'password'];
-
-  fields.forEach((f) => {
-    if(!(f in values)) {
-      errors[f] = `${f} is required`;
-    }
-  });
-  if(values.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Please provide valid email';
-  }
-
-  return errors;
-};
 function mapStateToProps(state) {
 	return {
-		errorMessage: state.signin.error,
+    values: state.form.values,
+		message: state.signin.message,
+    errors:state.signin.errors,
+    isLoading: state.form.isLoading
 
 	};
 }
 function mapDispatchToProps(dispatch) {
   return {
-    onSubmit: data => dispatch(loginUser(data))
+    onSave: values => dispatch(loginUser(values)),
+    onChange: (name, value) => dispatch(formUpdate(name,value)),
+    loginUserFailure: (errors, message) => dispatch(loginUserFailure(errors, message)),
+    addFlashMessage: (message) => dispatch(addFlashMessage(message))
   };
 }
-/* eslint-disable */
-SigninForm = reduxForm({
-	form: 'login',
-	validate
-})(SigninForm);
-/*eslint-enable */
 export default connect(mapStateToProps, mapDispatchToProps)(SigninForm);

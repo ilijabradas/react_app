@@ -22,12 +22,6 @@ class SignupPage extends Component {
         );
     }
 }
-
-// function mapDispatchToProps(dispatch) {
-//   return {
-//     saveUser: () => dispatch(saveUser())
-//   };
-// }
 export default SignupPage;
 /**
  * This page get this function userSignupRequest from redux

@@ -14,6 +14,10 @@ import apiRoutes from './routes/apiRoutes';
 
 import authCheckMiddleware from './middleware/authCheckMiddleware';
 
+import database from './config/database';
+import connect from './models/index';
+// connect to the database and load models
+connect(database.url);
 const compiler = webpack(webpackCongif);
 let app = express();
 app.use(function(req, res, next) {
@@ -24,6 +28,7 @@ app.use(function(req, res, next) {
 });
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 config_passport(passport); // pass passport for configuration
 // required for passport
 app.use(passport.initialize());

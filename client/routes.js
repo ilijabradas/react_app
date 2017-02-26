@@ -5,11 +5,13 @@ import App from './components/App';
 import Greetings from './components/Greetings';
 import SignupPage from './components/signup/SignupPage';
 import SigninPage from './components/signin/SigninPage';
+import VerificationPage from './components/verification/VerificationPage';
 
 export default (
 	<Route path="/" component={App}>
 	<IndexRoute component={Greetings}/> //make all main routes components as class components
-	<Route path="signup" component={SignupPage}/>
-	<Route path="signin" component={SigninPage}/>
+	<Route path="/signup" component={SignupPage}/>
+	<Route path="/signin" component={SigninPage}/>
+	<Route path="/verify/:token" component={VerificationPage} />
 	</Route>
 );

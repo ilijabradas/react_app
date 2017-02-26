@@ -17,7 +17,8 @@ import bootstraploader from 'bootstrap-loader';
 */
 const logger = createLogger();
 const createStoreWithMiddleware = applyMiddleware(thunk, logger)(createStore);
-const store = createStoreWithMiddleware(rootReducer);
+const store = createStoreWithMiddleware(rootReducer, /* preloadedState, */
+   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 render(
   <Provider store={store}>
   <Router history={browserHistory} routes={routes}/>

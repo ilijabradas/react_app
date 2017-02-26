@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
-import database from '../config/database';
 import bcrypt from 'bcrypt-nodejs';
-mongoose.connect(database.url);
 let SALT_WORK_FACTOR = 10;
+
 // define the schema for our user model
 let userSchema = mongoose.Schema({
 
@@ -16,7 +15,8 @@ let userSchema = mongoose.Schema({
         },
         password: String,
         timezone: String,
-        isActive: Number
+        verified: Boolean,
+        verify_token: String
     },
     facebook: {
         id: String,

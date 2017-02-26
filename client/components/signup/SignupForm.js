@@ -1,14 +1,16 @@
 import React, {Component}  from 'react';
-import {reduxForm} from 'redux-form';
 import {connect} from 'react-redux';
 import map from 'lodash/map';
 import timezones from '../../data/timezones';
 import styles from '../formElements/formElements.scss';
-import {formUpdate, registerUser}   from '../../actions/actionForm';
+import { formUpdate }   from '../../actions/actionForm';
+import { registerUser, registerUserFailure } from '../../actions/actionRegister';
+import { addFlashMessage, resetFlashMessages } from '../../actions/actionFlashMessage';
 import FieldGroup from '../formElements/FieldGroup';
-import { Form, FormControl, Col, Checkbox, Button, FormGroup, Label } from 'react-bootstrap';
+import { Form, FormControl, Col, Checkbox, Button, FormGroup, Label, Alert } from 'react-bootstrap';
 import classnames from 'classnames';
-
+import { validateSignupForm } from '../../../server/models/validation';
+import isEmpty from 'lodash/isEmpty';
 
 // {... props} passing large number of props wrap in object with spread notation
 class SignupForm extends Component { //if component have state it needs to be class
@@ -18,9 +20,21 @@ class SignupForm extends Component { //if component have state it needs to be cl
     onChange = (event, index, value) => {
        this.props.onChange(event.target.name, event.target.value);
     };
+    isFormValid = () => {
+    const { errors, message } =  validateSignupForm(this.props.values);
+    if (!isEmpty(errors)) {
+      this.props.registerUserFailure(errors, message);
+      this.props.resetFlashMessages();
+      this.props.addFlashMessage(message);
+    }
+    return isEmpty(errors);
+    }
+
     onSave = (event) => {
-        event.preventDefault();
+      event.preventDefault();
+      if(this.isFormValid()) {
         this.props.onSave(this.props.values);
+      }
     }
     getClasses(field) {
     return classnames({
@@ -29,9 +43,7 @@ class SignupForm extends Component { //if component have state it needs to be cl
   }
     render() {
         return (
-					// this.props.handleSubmit is created by reduxForm()
-         // if the form is valid, it will call this.props.onSubmit
-         <Form onSubmit={this.onSave} horizontal>
+         <Form onSubmit={this.onSave} horizontal id="register">
            <FieldGroup
              id="name"
              type="text"
@@ -95,52 +107,43 @@ class SignupForm extends Component { //if component have state it needs to be cl
                }
              </FieldGroup>
              <FormGroup>
-               <Col smOffset={4} sm={8}>
-                 <Checkbox>Remember me</Checkbox>
-               </Col>
-             </FormGroup>
-             <FormGroup>
-               <Col smOffset={4} sm={8}>
+               <Col smOffset={3} sm={9}>
                  <Button type="submit"  disabled={this.props.isLoading}>
                    { this.props.isLoading ? 'Creating...' : 'Create New Account'}
                  </Button>
                </Col>
              </FormGroup>
              <FormGroup>
-               <Col smOffset={4} sm={8}>
-             {this.props.message &&
-               <div className="alert alert-info">{this.props.message}</div>}
+               <Col smOffset={3} sm={9}>
+             {this.props.message.style &&
+               <Alert bsStyle={classnames({
+                 'success': this.props.message.style === 'success',
+                 'danger': this.props.message.style === 'danger'
+                 })}
+               >
+                 {this.props.message.text}
+               </Alert>}
                </Col>
              </FormGroup>
                </Form>
-             //this.setState({ disabled: true });
-            //this.props.errorMessage.register == this.props = {errorMessage :{ register: ''}}
         );
     }
 }
-const validate = values => {
-  const errors = {};
-  const fields = ['name', 'email', 'password', 'passwordConfirmation', 'timezone'];
-  fields.forEach((f) => {
-    if(!(f in values)) {
-      errors[f] = `${f} is required`;
-    }
-  });
-  return errors;
-};
 function mapStateToProps(state) {
 	return {
-		message: state.form.message,
+		message: state.signup.message,
     isLoading: state.form.isLoading,
     values: state.form.values,
-    errors:state.form.errors
-
+    errors:state.signup.errors
 	};
 }
 function mapDispatchToProps(dispatch) {
   return {
    onSave: (values) => dispatch(registerUser(values)),
-   onChange: (name, value) => dispatch(formUpdate(name, value))
+   onChange: (name, value) => dispatch(formUpdate(name, value)),
+   registerUserFailure: (errors, message) => dispatch(registerUserFailure(errors, message)),
+   addFlashMessage: (message) => dispatch(addFlashMessage(message)),
+   resetFlashMessages:() => dispatch(resetFlashMessages())
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(SignupForm);

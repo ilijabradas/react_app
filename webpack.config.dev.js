@@ -8,7 +8,6 @@ let webpackConfig = {
         colors: true
     },
     entry: [
-        'whatwg-fetch',
         'webpack-hot-middleware/client',
         path.join(__dirname, './client/index.js')
     ],
@@ -25,7 +24,8 @@ let webpackConfig = {
         // transpile ES6/7 to ES5 via babel
         loaders: [{
                 test: /(\.js|\.jsx)$/,
-                include: path.join(__dirname, 'client'), //includev files only from client folder
+                include: [path.join(__dirname, 'client'),
+                         path.join(__dirname, 'server/models')], //includev files only from client folder
                 loaders: ['react-hot', 'babel']
             },
             // bundle LESS and CSS into a single CSS file, auto-generating -vendor-prefixes

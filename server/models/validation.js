@@ -7,40 +7,40 @@ import isEmpty from 'lodash/isEmpty';
  * @returns {object} The result of validation. Object contains a boolean validation result,
  *                   errors tips, and a global message for the whole form.
  */
-function allTitleCase(inStr) {
- return inStr.replace(/\w\S*/g, function(tStr) {
- return tStr.charAt(0).toUpperCase() + tStr.substr(1).toLowerCase();
-});
-}
 export function validateSignupForm(payload) {
     const errors = {};
-    let isFormValid = true;
-    let message = '';
-    Object.keys(payload).map((f) => {
-      if(!payload[f] && typeof(payload[f]) === 'string' && validator.isEmpty(payload[f])) {
-        isFormValid = false;
-        errors[f] = `${allTitleCase(f)} is required`;
-        console.log(`key=${f}  value=${payload[f]}`);
-      }
-    });
-    if (payload.email &&  !validator.isEmail(payload.email)) {
-        isFormValid = false;
+    const message = {};
+    if (validator.isEmpty(payload.name)) {
+        errors.name = 'Name is required';
+    }
+    if (validator.isEmpty(payload.email)) {
+        errors.email = 'Email is required';
+    }
+    if (validator.isEmpty(payload.password)) {
+        errors.password = 'Password is required';
+    }
+    if (validator.isEmpty(payload.passwordConfirmation)) {
+        errors.passwordConfirmation = 'Password confirmation is required';
+    }
+    if (validator.isEmpty(payload.timezone)) {
+        errors.timezone = 'Timezone is required';
+    }
+    if (payload.email && !validator.isEmail(payload.email)) {
         errors.email = 'Please provide a correct email address.';
     }
     if (payload.password && payload.password.length < 4) {
-        isFormValid = false;
         errors.password = 'Password must have at least 4 characters.';
     }
     if (payload.passwordConfirmation && !validator.equals(payload.password, payload.passwordConfirmation)) {
-        isFormValid = false;
         errors.password = 'Passwords must match.';
     }
-    if (!isFormValid) {
-        message = 'Check the form for errors.';
+    if (!isEmpty(errors)) {
+        message.style = 'danger';
+        message.text = 'Check the form for errors.';
     }
 
     return {
-        success: isFormValid,
+        success: isEmpty(errors),
         message,
         errors
     };
@@ -54,25 +54,25 @@ export function validateSignupForm(payload) {
  */
 export function validateLoginForm(payload) {
     const errors = {};
-    let isFormValid = true;
-    let message = '';
+    const message = {};
 
-    if (!payload || typeof payload.email !== 'string' || payload.email.length === 0) {
-        isFormValid = false;
-        errors.email = 'Please provide your email address.';
+
+    if (validator.isEmpty(payload.email)) {
+        errors.email = 'Email is required';
     }
-
-    if (!payload || typeof payload.password !== 'string' || payload.password.length === 0) {
-        isFormValid = false;
-        errors.password = 'Please provide your password.';
+    if (validator.isEmpty(payload.password)) {
+        errors.password = 'Password is required';
     }
-
-    if (!isFormValid) {
-        message = 'Check the form for errors.';
+    if (payload.email && !validator.isEmail(payload.email)) {
+        errors.email = 'Please provide a correct email address.';
+    }
+    if (!isEmpty(errors)) {
+        message.style = 'danger';
+        message.text = 'Check the form for errors.';
     }
 
     return {
-        success: isFormValid,
+        success: isEmpty(errors),
         message,
         errors
     };
